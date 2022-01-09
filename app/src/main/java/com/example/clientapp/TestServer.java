@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -35,6 +36,7 @@ public class TestServer extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_test_server);
         tv = findViewById(R.id.tv);
         et = findViewById(R.id.edit_text);
@@ -66,12 +68,14 @@ public class TestServer extends AppCompatActivity {
                 username,
                 roomNumber,
                 content,
+                "",
                 ""
                 )));
         Log.d("MESSAGE", String.valueOf(new MessageData(
                 username,
                 roomNumber,
                 content,
+                "",
                 ""
                 )));
         appendString(username+" : "+content);

@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -29,20 +30,24 @@ import java.util.Random;
 public class MainActivity extends AppCompatActivity {
 
     GoogleSignInClient mGoogleSignInClient;
-    int RC_SIGN_IN=123;
+    int RC_SIGN_IN = 123;
     Random rd = new Random();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
         setContentView(R.layout.activity_main);
         Button login = this.findViewById(R.id.login);
         SignInButton gb = findViewById(R.id.sign_in_button);
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, MenuActivity.class) ;
+                Intent intent = new Intent(MainActivity.this, MenuActivity.class);
                 Bundle bundle = new Bundle();
-                bundle.putString("id","human-"+rd.nextInt(100));
+                bundle.putString("id", "human-" + rd.nextInt(100));
                 intent.putExtras(bundle);
                 startActivity(intent);
             }
@@ -57,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
         mGoogleSignInClient.silentSignIn().addOnCompleteListener(this, new OnCompleteListener<GoogleSignInAccount>() {
             @Override
             public void onComplete(@NonNull Task<GoogleSignInAccount> task) {
-                Toast.makeText(MainActivity.this,"Already Loggined!",Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "Already Loggined!", Toast.LENGTH_SHORT).show();
                 handleSignInResult(task);
             }
         });
@@ -68,6 +73,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
     private void signIn() {
         Intent signInIntent = mGoogleSignInClient.getSignInIntent();
         startActivityForResult(signInIntent, RC_SIGN_IN);
@@ -98,15 +104,15 @@ public class MainActivity extends AppCompatActivity {
                 String personId = acct.getId();
                 Uri personPhoto = acct.getPhotoUrl();
                 String idToken = acct.getIdToken();
-                Log.d(TAG, "handleSignInResult:personName "+personName);
-                Log.d(TAG, "handleSignInResult:personGivenName "+personGivenName);
-                Log.d(TAG, "handleSignInResult:personEmail "+personEmail);
-                Log.d(TAG, "handleSignInResult:personId "+personId);
-                Log.d(TAG, "handleSignInResult:personFamilyName "+personFamilyName);
-                Log.d(TAG, "handleSignInResult:personPhoto "+personPhoto);
+                Log.d(TAG, "handleSignInResult:personName " + personName);
+                Log.d(TAG, "handleSignInResult:personGivenName " + personGivenName);
+                Log.d(TAG, "handleSignInResult:personEmail " + personEmail);
+                Log.d(TAG, "handleSignInResult:personId " + personId);
+                Log.d(TAG, "handleSignInResult:personFamilyName " + personFamilyName);
+                Log.d(TAG, "handleSignInResult:personPhoto " + personPhoto);
                 Bundle bundle = new Bundle();
-                bundle.putString("id",personEmail);
-                Intent intent = new Intent(MainActivity.this, MenuActivity.class) ;
+                bundle.putString("id", personEmail);
+                Intent intent = new Intent(MainActivity.this, MenuActivity.class);
                 intent.putExtras(bundle);
                 startActivity(intent);
             }
