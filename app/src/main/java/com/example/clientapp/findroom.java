@@ -47,7 +47,7 @@ public class findroom extends AppCompatActivity {
                 }
                 mSocket.connect();
                 roomNumber=et.getText().toString().trim();
-                mSocket.emit("enter",gson.toJson(new MessageData(id,roomNumber,"","")));
+                mSocket.emit("enter",gson.toJson(new MessageData(id,roomNumber,"","","")));
                 mSocket.on("roomfound",whenroomfound);
             }
         });

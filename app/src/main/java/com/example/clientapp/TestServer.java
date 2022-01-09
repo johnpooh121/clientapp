@@ -66,12 +66,14 @@ public class TestServer extends AppCompatActivity {
                 username,
                 roomNumber,
                 content,
+                "",
                 ""
                 )));
         Log.d("MESSAGE", String.valueOf(new MessageData(
                 username,
                 roomNumber,
                 content,
+                "",
                 ""
                 )));
         appendString(username+" : "+content);
