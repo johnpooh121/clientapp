@@ -9,6 +9,8 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,7 +24,7 @@ import io.socket.emitter.Emitter;
 
 public class findroom extends AppCompatActivity {
     String id = "noname";
-    TextView tv;
+    TextView tv_waiting;
     EditText et;
     Button btn;
     String roomNumber="1";
@@ -39,6 +41,7 @@ public class findroom extends AppCompatActivity {
         Toast.makeText(this,""+id,Toast.LENGTH_SHORT).show();
         btn = this.findViewById(R.id.enter_room);
         et = this.findViewById(R.id.room_id);
+        tv_waiting = findViewById(R.id.tv_waiting);
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -48,9 +51,14 @@ public class findroom extends AppCompatActivity {
                     e.printStackTrace();
                 }
                 mSocket.connect();
+                mSocket.on("refuse",refuse);
                 roomNumber=et.getText().toString().trim();
                 mSocket.emit("enter",gson.toJson(new MessageData(id,roomNumber,"","","")));
                 mSocket.on("roomfound",whenroomfound);
+                btn.setVisibility(View.GONE);
+                et.setVisibility(View.GONE);
+                tv_waiting.setText("Waiting for opponent..\n취소하시려면 뒤로가기를 눌러주세요");
+                tv_waiting.setVisibility(View.VISIBLE);
             }
         });
     }
@@ -77,4 +85,33 @@ public class findroom extends AppCompatActivity {
             });
         }
     };
+
+    public Emitter.Listener refuse = new Emitter.Listener() {
+        @Override
+        public void call(final Object... args) {
+
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    MessageData data = gson.fromJson(args[0].toString(), MessageData.class);
+                    if(id.equals(data.username)){
+                        mSocket.disconnect();
+                        Toast.makeText(findroom.this,"이 방 번호는 사용중입니다. 다른 방 번호를 선택하세요",Toast.LENGTH_LONG).show();
+                        Intent intent = new Intent(findroom.this, MenuActivity.class);
+                        Bundle bundle = new Bundle();
+                        bundle.putString("id",id);
+                        intent.putExtras(bundle);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(intent);
+                    }
+                }
+            });
+        }
+    };
+
+    @Override
+    public void onBackPressed() {
+        mSocket.disconnect();
+        super.onBackPressed();
+    }
 }

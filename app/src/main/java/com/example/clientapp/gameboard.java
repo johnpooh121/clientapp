@@ -2,14 +2,17 @@ package com.example.clientapp;
 
 import static com.example.clientapp.findroom.mSocket;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.media.Image;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.provider.ContactsContract;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -18,6 +21,8 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
@@ -32,6 +37,7 @@ public class gameboard extends AppCompatActivity {
     Gson gson = new Gson();
     LinearLayout.LayoutParams cellparams,wallparams,pointparams;
     ConstraintLayout constly;
+    LinearLayout leftwallandtimer;
     LinearLayout controlpanel;
     int[][] walls=new int[15][15];//0 initial 1 horizontal 2 vertical
     boolean[][][] possiblept = new boolean[15][15][2];// sector 0 for horizontal, 1 for vertical
@@ -39,6 +45,7 @@ public class gameboard extends AppCompatActivity {
     ArrayList<Point> pcells = new ArrayList<Point>();
     boolean[][][] con = new boolean[15][15][4];
     boolean[][] vis = new boolean[15][15];
+    boolean isgameover= false;
     int[] dx = {1,-1,0,0};
     int[] dy = {0,0,-1,1}; //eswn
     int[] orth={2,2,0,0};
@@ -46,14 +53,18 @@ public class gameboard extends AppCompatActivity {
     Button[][] points = new Button[15][15];
     Button choose_wall,choose_move,confirm_wall,confirm_move,wall_back,move_back,gotomenu;
     ToggleButton togglebtn;
+    TextView tv_myname,tv_opname,tv_mystatus,tv_opstatus,tv_left_walls,lefttime;
+    ProgressBar pgbar;
     int px,py,ox,oy;
     String pickedcellcol="#FF0000",possiblecellcol="#888888",cellcol="#000000";
     static boolean ismyturn=true;
     int scrx,scry,cellx,celly;
     int recent_cell_x=5,recent_cell_y=5,recent_wall_x=5,recent_wall_y=5;
+    CountDownTimer mytimer;
     char recent_ori='h';
     int gap=35;
     int leftwall=10;
+    int maxtime = 6;
     ImageView playerimage,opimage;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,6 +92,21 @@ public class gameboard extends AppCompatActivity {
         wall_back=findViewById(R.id.wall_back);
         move_back=findViewById(R.id.move_back);
         gotomenu = findViewById(R.id.gotomenu);
+
+        tv_myname = findViewById(R.id.tv_myname);
+        tv_opname = findViewById(R.id.tv_opname);
+        tv_mystatus = findViewById(R.id.tv_mystatus);
+        tv_opstatus = findViewById(R.id.tv_opstatus);
+        tv_left_walls = findViewById(R.id.tv_left_walls);
+
+        leftwallandtimer = findViewById(R.id.leftwallandtimer);
+        lefttime= findViewById(R.id.lefttime);
+
+        pgbar = findViewById(R.id.progressBar);
+        pgbar.setMax(maxtime*1000);
+
+        tv_myname.setText("나 : "+id);
+        tv_opname.setText("상대 : "+opponentname);
 
         hideallcontrolpanel();
 
@@ -142,6 +168,7 @@ public class gameboard extends AppCompatActivity {
                 for(Point pt : pcells){
                     btns[pt.x][10-pt.y].setBackgroundColor(Color.parseColor(cellcol));
                 }
+                mytimer.cancel();
             }
         });
         recent_ori='h';
@@ -167,6 +194,7 @@ public class gameboard extends AppCompatActivity {
                 confirm_wall.setVisibility(View.GONE);
                 buildwall(recent_wall_x,recent_wall_y,recent_ori,Color.parseColor("#00FF00"));
                 leftwall--;
+                tv_left_walls.setText("left wall : "+leftwall);
                 if(leftwall>0)choose_wall.setVisibility(View.VISIBLE);
                 mSocket.emit("turnend",gson.toJson(new MessageData(
                         id,
@@ -180,6 +208,7 @@ public class gameboard extends AppCompatActivity {
                 for(Point pt : pcells){
                     btns[pt.x][10-pt.y].setBackgroundColor(Color.parseColor(cellcol));
                 }
+                mytimer.cancel();
             }
         });
 
@@ -218,6 +247,7 @@ public class gameboard extends AppCompatActivity {
 
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
+                mSocket.disconnect();
             }
         });
 
@@ -375,6 +405,17 @@ public class gameboard extends AppCompatActivity {
                     recent_cell_x=recent_wall_x=recent_cell_y=recent_wall_y=0;
                     updateboard(data.move);
                     updatecellpossibilities();
+                    mytimer = new CountDownTimer(maxtime*1000, 100) {
+                        public void onTick(long millisUntilFinished) {
+                            pgbar.setProgress((int)millisUntilFinished);
+                            lefttime.setText((int)millisUntilFinished/1000+"s");
+                        }
+
+                        public void onFinish() {
+                            if(isgameover)return;
+                            timeover();
+                        }
+                    }.start();
                 }
             });
         }
@@ -389,11 +430,12 @@ public class gameboard extends AppCompatActivity {
                 public void run() {
                     MessageData data = gson.fromJson(args[0].toString(), MessageData.class);
                     constly.removeAllViews();
+                    leftwallandtimer.removeAllViews();
                     ImageView resultimg = new ImageView(gameboard.this);
 
                     LinearLayout.LayoutParams customparams = new LinearLayout.LayoutParams(scrx,scry*8/10);
                     resultimg.setLayoutParams(customparams);
-                    if(id.equals(data.username)) {
+                    if(id.equals(data.username)||data.detail.equals("disconnect")) {
                         resultimg.setImageResource(R.drawable.trophy_icon);
                     }
                     else{
@@ -402,14 +444,21 @@ public class gameboard extends AppCompatActivity {
                     constly.addView(resultimg);
                     hideallcontrolpanel();
                     gotomenu.setVisibility(View.VISIBLE);
-                    mSocket.emit("left",gson.toJson(new MessageData(
-                            id,
-                            roomnumber,
-                            opponentname,
-                            "",
-                            ""
-                    )));
-                    mSocket.disconnect();
+                    isgameover=true;
+                    Toast.makeText(gameboard.this,"game over!",Toast.LENGTH_SHORT).show();
+//                    mSocket.emit("left",gson.toJson(new MessageData(
+//                            id,
+//                            roomnumber,
+//                            opponentname,
+//                            "",
+//                            ""
+//                    )));
+                    if(data.detail.equals("waive")||data.detail.equals("disconnect")){
+                        Toast.makeText(gameboard.this,"상대가 게임을 나갔습니다",Toast.LENGTH_LONG).show();
+                    }
+                    else if(data.detail.equals("timeover")){
+                        Toast.makeText(gameboard.this,"상대가 시간초과로 패배했습니다",Toast.LENGTH_LONG).show();
+                    }
                 }
             });
         }
@@ -608,5 +657,64 @@ public class gameboard extends AppCompatActivity {
     void showbasiccontrolpanel(){
         choose_move.setVisibility(View.VISIBLE);
         if(leftwall>0)choose_wall.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if(!isgameover)showMessage();
+    }
+
+    void showMessage(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Warning");
+        builder.setMessage("기권하시겠습니까? 1패가 추가됩니다");
+        builder.setPositiveButton("예", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                handlewaive("waive");
+                isgameover=true;
+                mSocket.disconnect();
+                Intent intent = new Intent(gameboard.this, MenuActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("id",id);
+                intent.putExtras(bundle);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+            }
+        });
+        builder.setNegativeButton("아니오", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+
+            }
+        });
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+    void handlewaive(String detail){
+        mSocket.emit("waive",gson.toJson(new MessageData(
+                id,
+                roomnumber,
+                opponentname,
+                detail,
+                ""
+        )));
+    }
+
+    void timeover(){
+        if(isgameover)return;
+        constly.removeAllViews();
+        leftwallandtimer.removeAllViews();
+        ImageView resultimg = new ImageView(gameboard.this);
+
+        LinearLayout.LayoutParams customparams = new LinearLayout.LayoutParams(scrx,scry*8/10);
+        resultimg.setLayoutParams(customparams);
+        resultimg.setImageResource(R.drawable.game_over);
+        constly.addView(resultimg);
+        hideallcontrolpanel();
+        gotomenu.setVisibility(View.VISIBLE);
+        isgameover=true;
+        handlewaive("timeover");
     }
 }
