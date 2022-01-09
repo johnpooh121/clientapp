@@ -23,6 +23,8 @@ import android.widget.ToggleButton;
 
 import com.google.gson.Gson;
 
+import java.util.ArrayList;
+
 import io.socket.emitter.Emitter;
 
 public class gameboard extends AppCompatActivity {
@@ -33,15 +35,19 @@ public class gameboard extends AppCompatActivity {
     LinearLayout controlpanel;
     int[][] walls=new int[15][15];//0 initial 1 horizontal 2 vertical
     boolean[][][] possiblept = new boolean[15][15][2];// sector 0 for horizontal, 1 for vertical
+    boolean[][] possiblecell = new boolean[15][15];
+    ArrayList<Point> pcells = new ArrayList<Point>();
     boolean[][][] con = new boolean[15][15][4];
     boolean[][] vis = new boolean[15][15];
     int[] dx = {1,-1,0,0};
     int[] dy = {0,0,-1,1}; //eswn
+    int[] orth={2,2,0,0};
     Button[][] btns = new Button[15][15];
     Button[][] points = new Button[15][15];
     Button choose_wall,choose_move,confirm_wall,confirm_move,wall_back,move_back,gotomenu;
     ToggleButton togglebtn;
     int px,py,ox,oy;
+    String pickedcellcol="#FF0000",possiblecellcol="#888888",cellcol="#000000";
     static boolean ismyturn=true;
     int scrx,scry,cellx,celly;
     int recent_cell_x=5,recent_cell_y=5,recent_wall_x=5,recent_wall_y=5;
@@ -76,11 +82,7 @@ public class gameboard extends AppCompatActivity {
         move_back=findViewById(R.id.move_back);
         gotomenu = findViewById(R.id.gotomenu);
 
-        confirm_move.setVisibility(View.GONE);
-        confirm_wall.setVisibility(View.GONE);
-        togglebtn.setVisibility(View.GONE);
-        wall_back.setVisibility(View.GONE);
-        move_back.setVisibility(View.GONE);
+        hideallcontrolpanel();
 
         for(int i=1;i<=9;i++){
             for(int j=1;j<=9;j++){
@@ -88,6 +90,12 @@ public class gameboard extends AppCompatActivity {
             }
         }
         for(int i=1;i<=9;i++)vis[0][i]=vis[i][0]=vis[10][i]=vis[i][10]=true;
+        for(int i=1;i<=9;i++){
+            con[i][1][2]=false;
+            con[i][9][3]=false;
+            con[1][i][1]=false;
+            con[9][i][0]=false;
+        }
 
         choose_move.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -96,6 +104,9 @@ public class gameboard extends AppCompatActivity {
                 choose_wall.setVisibility(View.GONE);
                 move_back.setVisibility(View.VISIBLE);
                 confirm_move.setVisibility(View.VISIBLE);
+                for(Point pt : pcells){
+                    btns[pt.x][10-pt.y].setBackgroundColor(Color.parseColor(possiblecellcol));
+                }
             }
         });
 
@@ -114,6 +125,7 @@ public class gameboard extends AppCompatActivity {
         confirm_move.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if(!ismyturn)return;
                 if(recent_cell_x==0||recent_cell_y==0)return;
                 choose_move.setVisibility(View.VISIBLE);
                 if(leftwall>0)choose_wall.setVisibility(View.VISIBLE);
@@ -127,6 +139,9 @@ public class gameboard extends AppCompatActivity {
                         "m"+recent_cell_x+(10-recent_cell_y)
                 )));
                 moveme(recent_cell_x,recent_cell_y);
+                for(Point pt : pcells){
+                    btns[pt.x][10-pt.y].setBackgroundColor(Color.parseColor(cellcol));
+                }
             }
         });
         recent_ori='h';
@@ -144,6 +159,7 @@ public class gameboard extends AppCompatActivity {
         confirm_wall.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if(!ismyturn)return;
                 if(recent_wall_x==0||recent_wall_y==0)return;
                 choose_move.setVisibility(View.VISIBLE);
                 wall_back.setVisibility(View.GONE);
@@ -161,6 +177,9 @@ public class gameboard extends AppCompatActivity {
                 )));
                 backtooriginwall(recent_wall_x,recent_wall_y);
                 hidepointchoices();
+                for(Point pt : pcells){
+                    btns[pt.x][10-pt.y].setBackgroundColor(Color.parseColor(cellcol));
+                }
             }
         });
 
@@ -171,6 +190,9 @@ public class gameboard extends AppCompatActivity {
                 if(leftwall>0)choose_wall.setVisibility(View.VISIBLE);
                 move_back.setVisibility(View.GONE);
                 confirm_move.setVisibility(View.GONE);
+                for(Point pt : pcells){
+                    btns[pt.x][10-pt.y].setBackgroundColor(Color.parseColor(cellcol));
+                }
             }
         });
 
@@ -343,10 +365,16 @@ public class gameboard extends AppCompatActivity {
                 public void run() {
                     Toast.makeText(getApplicationContext(),"new turn!",Toast.LENGTH_SHORT).show();
                     MessageData data = gson.fromJson(args[0].toString(), MessageData.class);
-                    if(!id.equals(data.username))return;
+                    if(!id.equals(data.username)){
+                        ismyturn=false;
+                        hideallcontrolpanel();
+                        return;
+                    }
+                    showbasiccontrolpanel();
                     ismyturn=true;
                     recent_cell_x=recent_wall_x=recent_cell_y=recent_wall_y=0;
                     updateboard(data.move);
+                    updatecellpossibilities();
                 }
             });
         }
@@ -372,8 +400,7 @@ public class gameboard extends AppCompatActivity {
                         resultimg.setImageResource(R.drawable.game_over);
                     }
                     constly.addView(resultimg);
-                    choose_move.setVisibility(View.GONE);
-                    choose_wall.setVisibility(View.GONE);
+                    hideallcontrolpanel();
                     gotomenu.setVisibility(View.VISIBLE);
                     mSocket.emit("left",gson.toJson(new MessageData(
                             id,
@@ -403,14 +430,20 @@ public class gameboard extends AppCompatActivity {
 
     void handlecelltouch(int x,int y){
         if(!ismyturn)return;
+        if(!possiblecell[x][y])return;
+        if(recent_cell_x!=0&&recent_cell_y!=0){
+            btns[recent_cell_x][10-recent_cell_y].setBackgroundColor(Color.parseColor(possiblecellcol));
+        }
         Toast.makeText(getApplicationContext(),x+" , "+y+" cell touched",Toast.LENGTH_SHORT).show();
         recent_cell_x=x;
         recent_cell_y=y;
+        btns[recent_cell_x][10-recent_cell_y].setBackgroundColor(Color.parseColor(pickedcellcol));
     }
     void handlepointtouch(int x,int y){
         if(!ismyturn)return;
         Toast.makeText(getApplicationContext(),x+" , "+y+" point touched",Toast.LENGTH_SHORT).show();
-        int rx=recent_wall_x,ry=recent_wall_y;recent_wall_x=x;recent_wall_y=y;
+        int rx=recent_wall_x,ry=recent_wall_y;
+        recent_wall_x=x;recent_wall_y=y;
         updatewallcandidate(rx,ry,x,y);
         togglebtn.setChecked(false);
         recent_ori='h';
@@ -532,5 +565,48 @@ public class gameboard extends AppCompatActivity {
             vis[tx][ty]=true;
             dfs(tx,ty);
         }
+    }
+    void updatecellpossibilities(){
+        pcells.clear();
+        for(int i=1;i<=9;i++){
+            for(int j=1;j<=9;j++){
+                possiblecell[i][j]=false;
+            }
+        }
+        for(int i=0;i<4;i++){
+            if(!con[px][py][i])continue;
+            if(ox==px+dx[i]&&oy==py+dy[i]){
+                if(!con[ox][oy][i]){
+                    for(int k=0;k<2;k++){
+                        if(con[ox][oy][orth[i]+k]){
+                            possiblecell[ox+dx[orth[i]+k]][oy+dy[orth[i]+k]]=true;
+                            pcells.add(new Point(ox+dx[orth[i]+k],oy+dy[orth[i]+k]));
+                        }
+                    }
+                }
+                else{
+                    possiblecell[ox+dx[i]][oy+dy[i]]=true;
+                    pcells.add(new Point(ox+dx[i],oy+dy[i]));
+                }
+            }
+            else{
+                possiblecell[px+dx[i]][py+dy[i]]=true;
+                pcells.add(new Point(px+dx[i],py+dy[i]));
+            }
+        }
+    }
+    void hideallcontrolpanel(){
+        choose_wall.setVisibility(View.GONE);
+        choose_move.setVisibility(View.GONE);
+        confirm_move.setVisibility(View.GONE);
+        confirm_wall.setVisibility(View.GONE);
+        wall_back.setVisibility(View.GONE);
+        move_back.setVisibility(View.GONE);
+        togglebtn.setVisibility(View.GONE);
+        gotomenu.setVisibility(View.GONE);
+    }
+    void showbasiccontrolpanel(){
+        choose_move.setVisibility(View.VISIBLE);
+        if(leftwall>0)choose_wall.setVisibility(View.VISIBLE);
     }
 }
