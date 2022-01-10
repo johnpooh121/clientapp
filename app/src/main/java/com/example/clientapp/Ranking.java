@@ -79,8 +79,17 @@ public class Ranking extends AppCompatActivity {
                     Collections.sort(arrstats);
                     RankingList = new ArrayList<RankingItem>();
                     for(Status st : arrstats){
-                        RankingList.add(new RankingItem(R.mipmap.knight_foreground,st.name,st.win+" 승 "+st.lose+"패"));
-                    }
+                        String pname = st.name;
+                        if(pname.contains("@")){
+                            String rname;
+                            int idx = pname.indexOf("@");
+                            rname = pname.substring(0,idx);
+                            RankingList.add(new RankingItem(R.mipmap.knight_foreground,rname,st.win+" 승 "+st.lose+"패"));
+                        }
+                        else{
+                            RankingList.add(new RankingItem(R.mipmap.knight_foreground,pname,st.win+" 승 "+st.lose+"패"));
+                        }
+                   }
                     rankingAdapter.setRankingList(RankingList);
                     rankSocket.disconnect();
                 }
