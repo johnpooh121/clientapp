@@ -42,7 +42,6 @@ public class Ranking extends AppCompatActivity {
                 RankingList.add(new RankingItem(R.mipmap.knight_foreground,i+"번째 사람",i+"번째 상태메시지"));
             else
                 RankingList.add(new RankingItem(R.mipmap.knight_foreground,i+"번째 사람",i+"번째 상태메시지"));
-
         }
         rankingAdapter.setRankingList(RankingList);
     }
