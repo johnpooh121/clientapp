@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
@@ -25,7 +26,12 @@ import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
+import java.io.UnsupportedEncodingException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.Base64;
 import java.util.Random;
+
 
 public class MainActivity extends AppCompatActivity {
 
@@ -47,7 +53,25 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this, MenuActivity.class);
                 Bundle bundle = new Bundle();
-                bundle.putString("id", "human-" + rd.nextInt(100));
+                int seed = rd.nextInt(10000000);
+                String xx=Integer.toString(seed);
+                Base64.Encoder encoder = null;
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                    encoder = Base64.getEncoder();
+                }
+                MessageDigest md = null;
+                try {
+                    md = MessageDigest.getInstance("SHA1");
+                    md.update(xx.getBytes("utf-8"));
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                        xx= encoder.encodeToString(md.digest());
+                    }
+                } catch (NoSuchAlgorithmException e) {
+                    e.printStackTrace();
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
+                bundle.putString("id", "human-" + xx.substring(0,12));
                 intent.putExtras(bundle);
                 startActivity(intent);
             }
