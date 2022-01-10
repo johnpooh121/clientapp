@@ -27,6 +27,7 @@ public class MenuActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MenuActivity.this, Ranking.class) ;
+                intent.putExtras(bundle);
                 startActivity(intent);
             }
         });

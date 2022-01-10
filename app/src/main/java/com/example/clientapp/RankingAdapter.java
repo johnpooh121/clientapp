@@ -27,7 +27,7 @@ public class RankingAdapter extends RecyclerView.Adapter<RankingAdapter.ViewHold
         holder.onBind(RankingList.get(position));
     }
 
-    public void setFriendList(ArrayList<RankingItem> list){
+    public  void setRankingList(ArrayList<RankingItem> list){
         this.RankingList = list;
         notifyDataSetChanged();
     }

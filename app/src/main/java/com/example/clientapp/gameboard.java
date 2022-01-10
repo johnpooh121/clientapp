@@ -56,7 +56,7 @@ public class gameboard extends AppCompatActivity {
     TextView tv_myname,tv_opname,tv_mystatus,tv_opstatus,tv_left_walls,lefttime;
     ProgressBar pgbar;
     int px,py,ox,oy;
-    String pickedcellcol="#FF0000",possiblecellcol="#888888",cellcol="#000000";
+    String pickedcellcol="#FF0000",possiblecellcol="#888888",cellcol="#8B4513";
     static boolean ismyturn=true;
     int scrx,scry,cellx,celly;
     int recent_cell_x=5,recent_cell_y=5,recent_wall_x=5,recent_wall_y=5;
@@ -64,8 +64,11 @@ public class gameboard extends AppCompatActivity {
     char recent_ori='h';
     int gap=35;
     int leftwall=10;
-    int maxtime = 6;
+    int maxtime = 30;
+    String opponent_wall_color = "#FFFFFF";
+    String my_wall_color = "#000000";
     ImageView playerimage,opimage;
+    boolean isMoveChoosed=false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         leftwall=10;
@@ -126,6 +129,7 @@ public class gameboard extends AppCompatActivity {
         choose_move.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                isMoveChoosed = true;
                 choose_move.setVisibility(View.GONE);
                 choose_wall.setVisibility(View.GONE);
                 move_back.setVisibility(View.VISIBLE);
@@ -144,6 +148,9 @@ public class gameboard extends AppCompatActivity {
                 wall_back.setVisibility(View.VISIBLE);
                 togglebtn.setVisibility(View.VISIBLE);
                 confirm_wall.setVisibility(View.VISIBLE);
+                for(Point pt : pcells){
+                    btns[pt.x][10-pt.y].setBackgroundColor(Color.parseColor(cellcol));
+                }
                 showpointchoices();
             }
         });
@@ -192,7 +199,7 @@ public class gameboard extends AppCompatActivity {
                 wall_back.setVisibility(View.GONE);
                 togglebtn.setVisibility(View.GONE);
                 confirm_wall.setVisibility(View.GONE);
-                buildwall(recent_wall_x,recent_wall_y,recent_ori,Color.parseColor("#00FF00"));
+                buildwall(recent_wall_x,recent_wall_y,recent_ori,Color.parseColor(my_wall_color));
                 leftwall--;
                 tv_left_walls.setText("left wall : "+leftwall);
                 if(leftwall>0)choose_wall.setVisibility(View.VISIBLE);
@@ -222,6 +229,7 @@ public class gameboard extends AppCompatActivity {
                 for(Point pt : pcells){
                     btns[pt.x][10-pt.y].setBackgroundColor(Color.parseColor(cellcol));
                 }
+                isMoveChoosed=false;
             }
         });
 
@@ -278,7 +286,7 @@ public class gameboard extends AppCompatActivity {
                 constly.addView(btns[i][j]);
                 btns[i][j].setX((float)((i-1)*(cellx+gap)+gap));
                 btns[i][j].setY((float)((j-1)*(celly+gap)+gap));
-                btns[i][j].setBackgroundColor(Color.parseColor("#000000"));
+                btns[i][j].setBackgroundColor(Color.parseColor("#8B4513"));
                 int x=i,y=j;
                 btns[i][j].setOnClickListener(new View.OnClickListener() {
                     int fx=x,fy=10-y;
@@ -290,11 +298,11 @@ public class gameboard extends AppCompatActivity {
             }
         }
         playerimage = new ImageView(this);
-        playerimage.setImageResource(R.mipmap.black_pawn);
+        playerimage.setImageResource(R.mipmap.black_pawn_foreground);
         playerimage.setLayoutParams(cellparams);
         constly.addView(playerimage);
         opimage = new ImageView(this);
-        opimage.setImageResource(R.mipmap.white_pawn);
+        opimage.setImageResource(R.mipmap.white_pawn_foreground);
         opimage.setLayoutParams(cellparams);
         constly.addView(opimage);
         moveme(px,py);
@@ -393,6 +401,7 @@ public class gameboard extends AppCompatActivity {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
+                    isMoveChoosed=false;
                     Toast.makeText(getApplicationContext(),"new turn!",Toast.LENGTH_SHORT).show();
                     MessageData data = gson.fromJson(args[0].toString(), MessageData.class);
                     if(!id.equals(data.username)){
@@ -473,12 +482,13 @@ public class gameboard extends AppCompatActivity {
         }
         else{
             char ori=move.charAt(3);
-            buildwall(x,y,ori,Color.parseColor("#0000FF"));
+            buildwall(x,y,ori,Color.parseColor(opponent_wall_color));
         }
     }
 
     void handlecelltouch(int x,int y){
         if(!ismyturn)return;
+        if(!isMoveChoosed)return;
         if(!possiblecell[x][y])return;
         if(recent_cell_x!=0&&recent_cell_y!=0){
             btns[recent_cell_x][10-recent_cell_y].setBackgroundColor(Color.parseColor(possiblecellcol));

@@ -16,8 +16,8 @@
         android:fontFamily="@font/font_bold"
         android:gravity="center"
         android:text="@string/quoridor"
-        android:textColor="#000000"
-        android:textSize="40sp"
+        android:textColor="@color/black"
+        android:textSize="50sp"
         android:layout_weight="1"/>
 
     <!--로그인 표-->

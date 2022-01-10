@@ -24,12 +24,13 @@ import io.socket.emitter.Emitter;
 
 public class findroom extends AppCompatActivity {
     String id = "noname";
-    TextView tv_waiting;
+    TextView tv_waiting, etrm;
     EditText et;
     Button btn;
     String roomNumber="1";
     static Socket mSocket;
     Gson gson = new Gson();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,6 +42,7 @@ public class findroom extends AppCompatActivity {
         Toast.makeText(this,""+id,Toast.LENGTH_SHORT).show();
         btn = this.findViewById(R.id.enter_room);
         et = this.findViewById(R.id.room_id);
+        etrm = this.findViewById(R.id.enter_the_room_number);
         tv_waiting = findViewById(R.id.tv_waiting);
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -57,7 +59,8 @@ public class findroom extends AppCompatActivity {
                 mSocket.on("roomfound",whenroomfound);
                 btn.setVisibility(View.GONE);
                 et.setVisibility(View.GONE);
-                tv_waiting.setText("Waiting for opponent..\n취소하시려면 뒤로가기를 눌러주세요");
+                etrm.setVisibility(View.GONE);
+                tv_waiting.setText("Waiting for opponent...\n\nPress back to cancel");
                 tv_waiting.setVisibility(View.VISIBLE);
             }
         });
