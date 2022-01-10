@@ -76,6 +76,6 @@
    - 이 또한 confirm, back 두 버튼을 선택하여 벽을 세우도록 했습니다.
    - confirm을 선택할 경우 그 방향으로 벽을 세웁니다.
 
-## Credit
-  > ByungKyu Kong / johnpooh121@gmail.com
-  > Junseo Kang / pointjunseo@dgist.ac.kr
+##  Credit
+> Byungkyu Kong / johnpooh@gmail.com   
+> Junseo Kang / pointjunseo@dgist.ac.kr 
