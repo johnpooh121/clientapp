@@ -171,7 +171,7 @@ public class gameboard extends AppCompatActivity {
                         roomnumber,
                         opponentname,
                         "",
-                        "m"+recent_cell_x+(10-recent_cell_y)
+                        "m"+(10-recent_cell_x)+(10-recent_cell_y)
                 )));
                 moveme(recent_cell_x,recent_cell_y);
                 for(Point pt : pcells){
@@ -257,7 +257,7 @@ public class gameboard extends AppCompatActivity {
 
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
-                mSocket.disconnect();
+                if(mSocket!=null)mSocket.disconnect();
             }
         });
 
@@ -743,7 +743,7 @@ public class gameboard extends AppCompatActivity {
             public void onTick(long millisUntilFinished) {
             }
             public void onFinish() {
-                mSocket.disconnect();
+                if(mSocket!=null)mSocket.disconnect();
             }
         }.start();
     }
