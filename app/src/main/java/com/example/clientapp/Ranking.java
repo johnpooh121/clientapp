@@ -82,6 +82,7 @@ public class Ranking extends AppCompatActivity {
                         RankingList.add(new RankingItem(R.mipmap.knight_foreground,st.name,st.win+" 승 "+st.lose+"패"));
                     }
                     rankingAdapter.setRankingList(RankingList);
+                    rankSocket.disconnect();
                 }
             });
         }

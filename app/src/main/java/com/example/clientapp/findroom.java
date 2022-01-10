@@ -114,7 +114,7 @@ public class findroom extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        mSocket.disconnect();
+        if(mSocket!=null)mSocket.disconnect();
         super.onBackPressed();
     }
 }

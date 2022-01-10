@@ -17,6 +17,7 @@ import android.provider.ContactsContract;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
@@ -73,6 +74,7 @@ public class gameboard extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         leftwall=10;
         super.onCreate(savedInstanceState);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         Bundle bundle = getIntent().getExtras();
         opponentname=bundle.getString("opponentname");
         id=bundle.getString("id");
@@ -275,6 +277,7 @@ public class gameboard extends AppCompatActivity {
         mSocket.on("newturn",newturn);
         mSocket.on("gameover",gameover);
         mSocket.on("yourstatus",receivestatus);
+
     }
     void createBoard(){
         Point pt = new Point();
@@ -486,7 +489,6 @@ public class gameboard extends AppCompatActivity {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    Toast.makeText(getApplicationContext(),"receivestatus",Toast.LENGTH_SHORT).show();
                     MessageData data = gson.fromJson(args[0].toString(), MessageData.class);
                     if(id.equals(data.username)){
                         tv_mystatus.setText(data.win+"승 "+data.lose+"패");
@@ -709,7 +711,6 @@ public class gameboard extends AppCompatActivity {
             public void onClick(DialogInterface dialogInterface, int i) {
                 handlewaive("waive");
                 isgameover=true;
-                mSocket.disconnect();
                 Intent intent = new Intent(gameboard.this, MenuActivity.class);
                 Bundle bundle = new Bundle();
                 bundle.putString("id",id);
@@ -729,6 +730,8 @@ public class gameboard extends AppCompatActivity {
     }
 
     void handlewaive(String detail){
+        Toast.makeText(this,"handlewaive",Toast.LENGTH_SHORT).show();
+        if(mSocket!=null)Toast.makeText(this,"Not null",Toast.LENGTH_SHORT).show();
         mSocket.emit("waive",gson.toJson(new MessageData(
                 id,
                 roomnumber,
@@ -736,6 +739,13 @@ public class gameboard extends AppCompatActivity {
                 detail,
                 ""
         )));
+        CountDownTimer temptimer = new CountDownTimer(5, 1000) {
+            public void onTick(long millisUntilFinished) {
+            }
+            public void onFinish() {
+                mSocket.disconnect();
+            }
+        }.start();
     }
 
     void timeover(){
