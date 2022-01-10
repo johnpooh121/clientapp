@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.WindowManager;
 import java.util.ArrayList;
@@ -22,24 +23,28 @@ public class Ranking extends AppCompatActivity {
 
         setContentView(R.layout.activity_ranking);
 
-//        recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
-//
-//        /* initiate adapter */
-//        rankingAdapter = new RankingAdapter();
-//
-//        /* initiate recyclerview */
-//        recyclerView.setAdapter(rankingAdapter);
-//        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+
+        /* initiate adapter */
+        rankingAdapter = new RankingAdapter();
+
+        /* initiate recyclerview */
+        recyclerView.setAdapter(rankingAdapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
 //        recyclerView.setLayoutManager(new LinearLayoutManager(this, RecyclerView.HORIZONTAL,false));
-//
-//        /* adapt data */
-//        init();
-//
-//        rankingAdapter.setFriendList(RankingList);
+
+
+        /* adapt data */
+        // db에서 승 순서대로 가져오기. 사진은 drawable/knight 로.
+        RankingList = new ArrayList<>();
+        for(int i=1;i<=10;i++){
+            if(i%2==0)
+                RankingList.add(new RankingItem(R.mipmap.ic_launcher_round,i+"번째 사람",i+"번째 상태메시지"));
+            else
+                RankingList.add(new RankingItem(R.mipmap.ic_launcher_round,i+"번째 사람",i+"번째 상태메시지"));
+
+        }
+        rankingAdapter.setRankingList(RankingList);
     }
 
-    //db에서 승 순서대로 로그인 정보 넣기
-    private void init(){
-
-    }
 }

@@ -110,6 +110,7 @@ public class MainActivity extends AppCompatActivity {
                 Log.d(TAG, "handleSignInResult:personId " + personId);
                 Log.d(TAG, "handleSignInResult:personFamilyName " + personFamilyName);
                 Log.d(TAG, "handleSignInResult:personPhoto " + personPhoto);
+
                 Bundle bundle = new Bundle();
                 bundle.putString("id", personEmail);
                 Intent intent = new Intent(MainActivity.this, MenuActivity.class);
