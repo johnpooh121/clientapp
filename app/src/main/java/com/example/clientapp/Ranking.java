@@ -39,9 +39,9 @@ public class Ranking extends AppCompatActivity {
         RankingList = new ArrayList<>();
         for(int i=1;i<=10;i++){
             if(i%2==0)
-                RankingList.add(new RankingItem(R.mipmap.ic_launcher_round,i+"번째 사람",i+"번째 상태메시지"));
+                RankingList.add(new RankingItem(R.mipmap.knight_foreground,i+"번째 사람",i+"번째 상태메시지"));
             else
-                RankingList.add(new RankingItem(R.mipmap.ic_launcher_round,i+"번째 사람",i+"번째 상태메시지"));
+                RankingList.add(new RankingItem(R.mipmap.knight_foreground,i+"번째 사람",i+"번째 상태메시지"));
 
         }
         rankingAdapter.setRankingList(RankingList);

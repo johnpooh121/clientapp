@@ -15,7 +15,7 @@
             android:id="@+id/image"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:src="@drawable/knight"/>
+            android:src="@mipmap/knight_foreground"/>
 
         <!--이름-->
         <TextView
