@@ -86,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
         mGoogleSignInClient.silentSignIn().addOnCompleteListener(this, new OnCompleteListener<GoogleSignInAccount>() {
             @Override
             public void onComplete(@NonNull Task<GoogleSignInAccount> task) {
-                Toast.makeText(MainActivity.this, "Already Loggined!", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(MainActivity.this, "Already Loggined!", Toast.LENGTH_SHORT).show();
                 handleSignInResult(task);
             }
         });

@@ -16,7 +16,7 @@ public class MenuActivity extends AppCompatActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_menu);
         Button ranking = this.findViewById(R.id.ranking);
-        Button test_server = this.findViewById(R.id.test_server);
+        //Button test_server = this.findViewById(R.id.test_server);
         Button findroom = this.findViewById(R.id.findroom);
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
@@ -31,14 +31,14 @@ public class MenuActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-        test_server.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(MenuActivity.this, TestServer.class) ;
-                intent.putExtras(bundle);
-                startActivity(intent);
-            }
-        });
+//        test_server.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Intent intent = new Intent(MenuActivity.this, TestServer.class) ;
+//                intent.putExtras(bundle);
+//                startActivity(intent);
+//            }
+//        });
         findroom.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

@@ -39,7 +39,7 @@ public class findroom extends AppCompatActivity {
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
         id = bundle.getString("id");
-        Toast.makeText(this,""+id,Toast.LENGTH_SHORT).show();
+//        Toast.makeText(this,""+id,Toast.LENGTH_SHORT).show();
         btn = this.findViewById(R.id.enter_room);
         et = this.findViewById(R.id.room_id);
         etrm = this.findViewById(R.id.enter_the_room_number);
@@ -73,12 +73,12 @@ public class findroom extends AppCompatActivity {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    Toast.makeText(getApplicationContext(),"room found!",Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(getApplicationContext(),"room found!",Toast.LENGTH_SHORT).show();
                     MessageData data = gson.fromJson(args[0].toString(), MessageData.class);
                     Bundle bundle = new Bundle();
                     String opponentname = data.username;
                     if(opponentname.equals(id))opponentname=data.content;
-                    Toast.makeText(getApplicationContext(),id+" : "+opponentname,Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(getApplicationContext(),id+" : "+opponentname,Toast.LENGTH_SHORT).show();
                     bundle.putString("opponentname",opponentname);
                     bundle.putString("id",id);
                     bundle.putString("roomid",roomNumber);
@@ -100,7 +100,7 @@ public class findroom extends AppCompatActivity {
                     MessageData data = gson.fromJson(args[0].toString(), MessageData.class);
                     if(id.equals(data.username)){
                         mSocket.disconnect();
-                        Toast.makeText(findroom.this,"이 방 번호는 사용중입니다. 다른 방 번호를 선택하세요",Toast.LENGTH_LONG).show();
+//                        Toast.makeText(findroom.this,"이 방 번호는 사용중입니다. 다른 방 번호를 선택하세요",Toast.LENGTH_LONG).show();
                         Intent intent = new Intent(findroom.this, MenuActivity.class);
                         Bundle bundle = new Bundle();
                         bundle.putString("id",id);

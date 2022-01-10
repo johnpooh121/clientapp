@@ -68,7 +68,7 @@ public class Ranking extends AppCompatActivity {
                     recyclerView.setAdapter(rankingAdapter);
                     recyclerView.setLayoutManager(new LinearLayoutManager(Ranking.this));
 
-                    Toast.makeText(getApplicationContext(),"receive ranking",Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(getApplicationContext(),"receive ranking",Toast.LENGTH_SHORT).show();
                     MessageData data = gson.fromJson(args[0].toString(), MessageData.class);
                     if(!id.equals(data.username))return;
                     stats=data.stats;

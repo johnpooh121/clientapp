@@ -412,7 +412,7 @@ public class gameboard extends AppCompatActivity {
                 @Override
                 public void run() {
                     isMoveChoosed=false;
-                    Toast.makeText(getApplicationContext(),"new turn!",Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(getApplicationContext(),"new turn!",Toast.LENGTH_SHORT).show();
                     MessageData data = gson.fromJson(args[0].toString(), MessageData.class);
                     if(!id.equals(data.username)){
                         ismyturn=false;
@@ -464,7 +464,7 @@ public class gameboard extends AppCompatActivity {
                     hideallcontrolpanel();
                     gotomenu.setVisibility(View.VISIBLE);
                     isgameover=true;
-                    Toast.makeText(gameboard.this,"game over!",Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(gameboard.this,"game over!",Toast.LENGTH_SHORT).show();
 //                    mSocket.emit("left",gson.toJson(new MessageData(
 //                            id,
 //                            roomnumber,
@@ -473,10 +473,10 @@ public class gameboard extends AppCompatActivity {
 //                            ""
 //                    )));
                     if(data.detail.equals("waive")||data.detail.equals("disconnect")){
-                        Toast.makeText(gameboard.this,"상대가 게임을 나갔습니다",Toast.LENGTH_LONG).show();
+//                        Toast.makeText(gameboard.this,"상대가 게임을 나갔습니다",Toast.LENGTH_LONG).show();
                     }
                     else if(data.detail.equals("timeover")){
-                        Toast.makeText(gameboard.this,"상대가 시간초과로 패배했습니다",Toast.LENGTH_LONG).show();
+//                        Toast.makeText(gameboard.this,"상대가 시간초과로 패배했습니다",Toast.LENGTH_LONG).show();
                     }
                 }
             });
@@ -521,14 +521,14 @@ public class gameboard extends AppCompatActivity {
         if(recent_cell_x!=0&&recent_cell_y!=0){
             btns[recent_cell_x][10-recent_cell_y].setBackgroundColor(Color.parseColor(possiblecellcol));
         }
-        Toast.makeText(getApplicationContext(),x+" , "+y+" cell touched",Toast.LENGTH_SHORT).show();
+//        Toast.makeText(getApplicationContext(),x+" , "+y+" cell touched",Toast.LENGTH_SHORT).show();
         recent_cell_x=x;
         recent_cell_y=y;
         btns[recent_cell_x][10-recent_cell_y].setBackgroundColor(Color.parseColor(pickedcellcol));
     }
     void handlepointtouch(int x,int y){
         if(!ismyturn)return;
-        Toast.makeText(getApplicationContext(),x+" , "+y+" point touched",Toast.LENGTH_SHORT).show();
+//        Toast.makeText(getApplicationContext(),x+" , "+y+" point touched",Toast.LENGTH_SHORT).show();
         int rx=recent_wall_x,ry=recent_wall_y;
         recent_wall_x=x;recent_wall_y=y;
         updatewallcandidate(rx,ry,x,y);
@@ -730,8 +730,10 @@ public class gameboard extends AppCompatActivity {
     }
 
     void handlewaive(String detail){
-        Toast.makeText(this,"handlewaive",Toast.LENGTH_SHORT).show();
-        if(mSocket!=null)Toast.makeText(this,"Not null",Toast.LENGTH_SHORT).show();
+//        Toast.makeText(this,"handlewaive",Toast.LENGTH_SHORT).show();
+        if(mSocket!=null){
+//            Toast.makeText(this,"Not null",Toast.LENGTH_SHORT).show();
+        }
         mSocket.emit("waive",gson.toJson(new MessageData(
                 id,
                 roomnumber,
