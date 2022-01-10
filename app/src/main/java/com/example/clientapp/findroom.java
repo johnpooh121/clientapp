@@ -47,6 +47,7 @@ public class findroom extends AppCompatActivity {
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if(mSocket!=null)mSocket.disconnect();
                 try {
                     mSocket = IO.socket("http://192.249.18.147:80");
                 } catch (URISyntaxException e) {

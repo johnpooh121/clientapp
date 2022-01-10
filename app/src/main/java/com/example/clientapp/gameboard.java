@@ -739,7 +739,7 @@ public class gameboard extends AppCompatActivity {
                 detail,
                 ""
         )));
-        CountDownTimer temptimer = new CountDownTimer(5, 1000) {
+        CountDownTimer temptimer = new CountDownTimer(3, 1000) {
             public void onTick(long millisUntilFinished) {
             }
             public void onFinish() {
