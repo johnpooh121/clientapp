@@ -208,7 +208,7 @@ public class gameboard extends AppCompatActivity {
                         roomnumber,
                         opponentname,
                         "",
-                        "w"+recent_wall_x+(9-recent_wall_y)+recent_ori
+                        "w"+(9-recent_wall_x)+(9-recent_wall_y)+recent_ori
                 )));
                 backtooriginwall(recent_wall_x,recent_wall_y);
                 hidepointchoices();
@@ -266,8 +266,15 @@ public class gameboard extends AppCompatActivity {
             "",
                 ""
         )));
+        mSocket.emit("getmystatus",gson.toJson(new MessageData(
+                id,roomnumber,opponentname,"",""
+        )));
+        mSocket.emit("getmystatus",gson.toJson(new MessageData(
+                opponentname,roomnumber,id,"",""
+        )));
         mSocket.on("newturn",newturn);
         mSocket.on("gameover",gameover);
+        mSocket.on("yourstatus",receivestatus);
     }
     void createBoard(){
         Point pt = new Point();
@@ -467,6 +474,25 @@ public class gameboard extends AppCompatActivity {
                     }
                     else if(data.detail.equals("timeover")){
                         Toast.makeText(gameboard.this,"상대가 시간초과로 패배했습니다",Toast.LENGTH_LONG).show();
+                    }
+                }
+            });
+        }
+    };
+
+    public Emitter.Listener receivestatus = new Emitter.Listener() {
+        @Override
+        public void call(final Object... args) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(getApplicationContext(),"receivestatus",Toast.LENGTH_SHORT).show();
+                    MessageData data = gson.fromJson(args[0].toString(), MessageData.class);
+                    if(id.equals(data.username)){
+                        tv_mystatus.setText(data.win+"승 "+data.lose+"패");
+                    }
+                    if(opponentname.equals(data.username)){
+                        tv_opstatus.setText(data.win+"승 "+data.lose+"패");
                     }
                 }
             });
