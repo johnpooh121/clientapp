@@ -5,8 +5,8 @@
 |--|--|--|--|--|
 |<img src="https://user-images.githubusercontent.com/96764875/148777757-b382f4a8-a0c8-49f7-af02-64bd67b6e102.png" >|<img src="https://user-images.githubusercontent.com/96764875/148778785-4afabcea-7b08-4a77-a704-a84a82ce04a8.png" >|<img src="https://user-images.githubusercontent.com/96764875/148785384-f5f3f80a-fd65-4870-93b8-e99f25b98911.png">|<img src = "https://user-images.githubusercontent.com/96764875/148778970-cbbde1eb-29a2-418f-95d9-df39155b63c6.png">|<img src="https://user-images.githubusercontent.com/96764875/148785942-146fc46f-652a-422f-9dad-0394f7da8ba5.png">|
 
-- **quoridor** 앱은 실제 보드게임 quoridor을 휴대폰으로 즐길 수 있습니다.
-- quoridor 앱을 통해 친구들과 재미있는 시간을 보낼 수 있습니다.
+- `quoridor` 앱은 실제 보드게임 quoridor을 휴대폰으로 즐길 수 있습니다.
+- `quoridor` 앱을 통해 친구들과 재미있는 시간을 보낼 수 있습니다.
 
 ---
 ## Loading
@@ -23,11 +23,11 @@
 
 ---
 ## Main Menu
-> 자신의 순위가 궁금하다면 RANKING, 순위를 올리고 싶다면 FIND ROOM으로 가세요!
+> 자신의 순위가 궁금하다면 `RANKING`, 순위를 올리고 싶다면 `FIND ROOM`으로 가세요!
 <img src="https://user-images.githubusercontent.com/96764875/148785384-f5f3f80a-fd65-4870-93b8-e99f25b98911.png" width="206" height="368">
 
-- Show your ranking! 옆의 RANKING 버튼을 통해 사용자들의 전적을 볼 수 있습니다.
-- Let's play the game! 옆의 FIND ROOM 를 통해 친구들과 quoridor 게임을 할 수 있습니다.
+- Show your ranking! 옆의 `RANKING` 버튼을 통해 사용자들의 전적을 볼 수 있습니다.
+- Let's play the game! 옆의 `FIND ROOM` 를 통해 친구들과 quoridor 게임을 할 수 있습니다.
 
 ---
 ## Ranking
@@ -61,20 +61,29 @@
 
 - 첫 번째 사진은 방을 찾았을 때의 화면입니다.
   - 여기서 벽을 세울 것인지 움직일 것인지를 결정합니다.
-  - move를 선택한 경우 움직일 수 있는 칸이 회색으로 변합니다.
-  - 이동할 칸을 선택하면 칸이 빨간 색으로 변하고 confirm, back 두 개의 버튼이 나타납니다.
-  - confirm을 선택할 경우 그 칸으로 움직입니다.
+  - `move`를 선택한 경우 움직일 수 있는 칸이 회색으로 변합니다.
+  - 이동할 칸을 선택하면 칸이 빨간 색으로 변하고 `confirm`, `back` 두 개의 버튼이 나타납니다.
+  - `confirm`을 선택할 경우 그 칸으로 움직입니다.
 
-|Wall1|Wall2|Wall3|
-|--|--|--|
-<img src="https://user-images.githubusercontent.com/96764875/148803075-07dc9952-102c-43a1-80ea-ebe0870256cb.png">|<img src="https://user-images.githubusercontent.com/96764875/148803167-f738ccb0-3114-4f39-8ff9-597ca4529133.png">|<img src="">
+|Wall1|Wall2|Wall3|Wall4|
+|--|--|--|--|
+<img src="https://user-images.githubusercontent.com/96764875/148803075-07dc9952-102c-43a1-80ea-ebe0870256cb.png">|<img src="https://user-images.githubusercontent.com/96764875/148803167-f738ccb0-3114-4f39-8ff9-597ca4529133.png">|<img src="https://user-images.githubusercontent.com/96764875/148875946-b098d1a1-c7db-4bae-8c59-2cfe85fb41bb.png">|<img src="https://user-images.githubusercontent.com/96764875/148875992-1b7a28a5-d423-4604-87d6-dccea4630f7a.png">
 
-- 이 파트는 wall을 선택했을 때의 화면입니다.
-   - wall을 선택했을 때 두 칸을 막는 벽의 중심을 선택할 수 있습니다.
+- 이 파트는 `wall`을 선택했을 때의 화면입니다.
+   - `wall`을 선택했을 때 두 칸을 막는 벽의 중심을 선택할 수 있습니다.
    - 한 점을 선택하였을 때 그 점을 중심으로 수직 방향 혹은 수평 방향으로 벽을 세울 수 있습니다.
-   - 하단 좌측의 toggle버튼을 이용해 선택한 점을 중심으로 수직 방향, 수평 방향으로 세울 것인지를 정할 수 있습니다.
-   - 이 또한 confirm, back 두 버튼을 선택하여 벽을 세우도록 했습니다.
-   - confirm을 선택할 경우 그 방향으로 벽을 세웁니다.
+   - 하단 좌측의 `toggle` 버튼을 이용해 선택한 점을 중심으로 수직 방향, 수평 방향으로 세울 것인지를 정할 수 있습니다.
+   - 이 또한 `confirm`, `back` 두 버튼을 선택하여 벽을 세우도록 했습니다.
+   - `confir`m을 선택할 경우 그 방향으로 벽을 세웁니다.
+
+|Win|Lose|Waive|
+|--|--|--|
+<img src="https://github.com/johnpooh121/clientapp/issues/17">|<img src="https://user-images.githubusercontent.com/96764875/148876207-593d7d9e-2a62-4c3b-818b-4af193a431ee.png">|<img src="https://user-images.githubusercontent.com/96764875/148876170-f9dedc0f-fa7e-49bd-85e8-82f221e69f4b.png">
+
+- 게임이 끝나는 경우입니다.
+  - 상대방이 게임 도중 기권을 하거나 상대방의 벽에 먼저 도착했을 경우 트로피 사진이 뜨면서 db에 저장된 자신의 승리 수가 증가합니다.
+  - 반대로 내가 게임 도중 기권을 하거나 상대방이 벽에 먼저 도착했을 경우 GAME OVER가 뜨면서 db에 저장된 자신의 패배 수가 증가합니다.
+  - 기권할 경우 확인 메세지를 물어봅니다.
 
 ##  Credit
 > Byungkyu Kong / johnpooh@gmail.com   
