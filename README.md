@@ -10,7 +10,7 @@
 
 ---
 ## Loading
-> 어플리케이션을 실행시키면 귀여운 친구가 춤을 추며 사용자를 반겨줍니다 ٩( ᐛ )و
+> 어플리케이션을 실행시키면 귀여운 비모가 춤을 추며 사용자를 반겨줍니다 ٩( ᐛ )و
 <img src="https://user-images.githubusercontent.com/96764875/148777757-b382f4a8-a0c8-49f7-af02-64bd67b6e102.png" width="206" height="368">
 
 ---
