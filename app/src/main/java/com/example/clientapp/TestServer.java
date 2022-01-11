@@ -56,7 +56,7 @@ public class TestServer extends AppCompatActivity {
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getApplicationContext(),"?",Toast.LENGTH_SHORT).show();
+//                Toast.makeText(getApplicationContext(),"?",Toast.LENGTH_SHORT).show();
                 sendMessage();
             }
         });
@@ -85,11 +85,11 @@ public class TestServer extends AppCompatActivity {
     public Emitter.Listener receive = new Emitter.Listener() {
         @Override
         public void call(final Object... args) {
-            //Toast.makeText(getApplicationContext(),"??",Toast.LENGTH_SHORT).show();
+//            Toast.makeText(getApplicationContext(),"??",Toast.LENGTH_SHORT).show();
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    Toast.makeText(getApplicationContext(),"!!",Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(getApplicationContext(),"!!",Toast.LENGTH_SHORT).show();
                     MessageData data = gson.fromJson(args[0].toString(), MessageData.class);
 //                    JSONObject data = (JSONObject) args[0];
                     String username;
