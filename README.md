@@ -85,6 +85,8 @@
   - 반대로 내가 게임 도중 기권을 하거나 상대방이 벽에 먼저 도착했을 경우 GAME OVER가 뜨면서 db에 저장된 자신의 패배 수가 증가합니다.
   - 기권할 경우 확인 메세지를 물어봅니다.
 
+- 서버 파일은 /experimental_dbgameserver.js입니다
+
 ##  Credit
 > Byungkyu Kong / johnpooh@gmail.com   
 > Junseo Kang / pointjunseo@dgist.ac.kr 
