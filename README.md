@@ -76,6 +76,15 @@
    - 이 또한 `confirm`, `back` 두 버튼을 선택하여 벽을 세우도록 했습니다.
    - `confir`m을 선택할 경우 그 방향으로 벽을 세웁니다.
 
+|special case|considering path|
+|--|--|
+<img src="https://user-images.githubusercontent.com/96766204/148931577-0cda56c9-2517-4b63-bcb0-5b61c675adb7.png">|<img src="https://user-images.githubusercontent.com/96766204/148931585-f4f855fb-3380-43f9-8e1b-d7e4d76db5fc.png">
+- 쿼리도의 중요한 룰
+   - 쿼리도의 룰중 매우 중요한 것은, 벽으로 나 또는 상대가 이길 수 있는 모든 경로를 막아서는 안된다는 것입니다
+   - 따라서 위 그림과 같은 경우 맨 왼쪽의 흰색 벽의 위 또는 아래를 수평 벽으로 막는다면 안될 것입니다
+   - 이런 경우는 각 턴이 시작할 때마다 dfs알고리즘을 통해서 벽이 놓여서는 안되는 위치에는 버튼이 표시되지 않도록 하였습니다.
+
+
 |Win|Lose|Waive|
 |--|--|--|
 <img src="https://user-images.githubusercontent.com/96764875/148876120-aa63717e-6c43-417b-84bb-55a166eba147.png">|<img src="https://user-images.githubusercontent.com/96764875/148876207-593d7d9e-2a62-4c3b-818b-4af193a431ee.png">|<img src="https://user-images.githubusercontent.com/96764875/148876170-f9dedc0f-fa7e-49bd-85e8-82f221e69f4b.png">
