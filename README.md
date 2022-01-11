@@ -90,8 +90,8 @@
 <img src="https://user-images.githubusercontent.com/96764875/148876120-aa63717e-6c43-417b-84bb-55a166eba147.png">|<img src="https://user-images.githubusercontent.com/96764875/148876207-593d7d9e-2a62-4c3b-818b-4af193a431ee.png">|<img src="https://user-images.githubusercontent.com/96764875/148876170-f9dedc0f-fa7e-49bd-85e8-82f221e69f4b.png">
 
 - 게임이 끝나는 경우입니다.
-  - 상대방이 게임 도중 기권을 하거나 상대방의 벽에 먼저 도착했을 경우 트로피 사진이 뜨면서 db에 저장된 자신의 승리 수가 증가합니다.
-  - 반대로 내가 게임 도중 기권을 하거나 상대방이 벽에 먼저 도착했을 경우 GAME OVER가 뜨면서 db에 저장된 자신의 패배 수가 증가합니다.
+  - 상대방이 게임 도중 기권을 하거나 상대방 쪽 행(맨 위 행)에 먼저 도착했을 경우 트로피 사진이 뜨면서 db에 저장된 자신의 승리 수가 증가합니다.
+  - 반대로 내가 게임 도중 기권을 하거나 상대방이 내 행(맨 아래 행)에 먼저 도착했을 경우 GAME OVER가 뜨면서 db에 저장된 자신의 패배 수가 증가합니다.
   - 기권할 경우 확인 메세지를 물어봅니다.
 
 - 서버 파일은 /experimental_dbgameserver.js입니다
